@@ -1,0 +1,2 @@
+/usr/bin/ar qc libaleth-interpreter.a  CMakeFiles/aleth-interpreter.dir/VM.cpp.o CMakeFiles/aleth-interpreter.dir/VMCalls.cpp.o CMakeFiles/aleth-interpreter.dir/VMOpt.cpp.o
+/usr/bin/ranlib libaleth-interpreter.a

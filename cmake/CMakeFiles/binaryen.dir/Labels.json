@@ -1,0 +1,43 @@
+{
+	"sources" : 
+	[
+		{
+			"file" : "/home/marscat/Desktop/ethereum/aleth/cmake/CMakeFiles/binaryen"
+		},
+		{
+			"file" : "/home/marscat/Desktop/ethereum/aleth/cmake/CMakeFiles/binaryen.rule"
+		},
+		{
+			"file" : "/home/marscat/Desktop/ethereum/aleth/cmake/CMakeFiles/binaryen-complete.rule"
+		},
+		{
+			"file" : "/home/marscat/Desktop/ethereum/aleth/cmake/deps/src/binaryen-stamp/binaryen-install.rule"
+		},
+		{
+			"file" : "/home/marscat/Desktop/ethereum/aleth/cmake/deps/src/binaryen-stamp/binaryen-mkdir.rule"
+		},
+		{
+			"file" : "/home/marscat/Desktop/ethereum/aleth/cmake/deps/src/binaryen-stamp/binaryen-download.rule"
+		},
+		{
+			"file" : "/home/marscat/Desktop/ethereum/aleth/cmake/deps/src/binaryen-stamp/binaryen-update.rule"
+		},
+		{
+			"file" : "/home/marscat/Desktop/ethereum/aleth/cmake/deps/src/binaryen-stamp/binaryen-patch.rule"
+		},
+		{
+			"file" : "/home/marscat/Desktop/ethereum/aleth/cmake/deps/src/binaryen-stamp/binaryen-configure.rule"
+		},
+		{
+			"file" : "/home/marscat/Desktop/ethereum/aleth/cmake/deps/src/binaryen-stamp/binaryen-build.rule"
+		}
+	],
+	"target" : 
+	{
+		"labels" : 
+		[
+			"binaryen"
+		],
+		"name" : "binaryen"
+	}
+}

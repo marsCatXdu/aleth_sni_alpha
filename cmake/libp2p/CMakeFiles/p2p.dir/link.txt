@@ -1,0 +1,2 @@
+/usr/bin/ar qc libp2p.a  CMakeFiles/p2p.dir/CapabilityHost.cpp.o CMakeFiles/p2p.dir/Common.cpp.o CMakeFiles/p2p.dir/ENR.cpp.o CMakeFiles/p2p.dir/EndpointTracker.cpp.o CMakeFiles/p2p.dir/Host.cpp.o CMakeFiles/p2p.dir/Network.cpp.o CMakeFiles/p2p.dir/NodeTable.cpp.o CMakeFiles/p2p.dir/Peer.cpp.o CMakeFiles/p2p.dir/RLPXFrameCoder.cpp.o CMakeFiles/p2p.dir/RLPxHandshake.cpp.o CMakeFiles/p2p.dir/Session.cpp.o CMakeFiles/p2p.dir/UDP.cpp.o CMakeFiles/p2p.dir/UPnP.cpp.o
+/usr/bin/ranlib libp2p.a

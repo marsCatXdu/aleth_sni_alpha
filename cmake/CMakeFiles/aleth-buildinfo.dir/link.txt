@@ -1,0 +1,2 @@
+/usr/bin/ar qc aleth/libaleth-buildinfo.a  CMakeFiles/aleth-buildinfo.dir/aleth/buildinfo.c.o
+/usr/bin/ranlib aleth/libaleth-buildinfo.a

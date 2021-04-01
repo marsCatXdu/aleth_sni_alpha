@@ -1,0 +1,13 @@
+# Target labels
+ secp256k1
+# Source files and their labels
+/home/marscat/Desktop/ethereum/aleth/cmake/CMakeFiles/secp256k1
+/home/marscat/Desktop/ethereum/aleth/cmake/CMakeFiles/secp256k1.rule
+/home/marscat/Desktop/ethereum/aleth/cmake/CMakeFiles/secp256k1-complete.rule
+/home/marscat/Desktop/ethereum/aleth/cmake/deps/src/secp256k1-stamp/secp256k1-install.rule
+/home/marscat/Desktop/ethereum/aleth/cmake/deps/src/secp256k1-stamp/secp256k1-mkdir.rule
+/home/marscat/Desktop/ethereum/aleth/cmake/deps/src/secp256k1-stamp/secp256k1-download.rule
+/home/marscat/Desktop/ethereum/aleth/cmake/deps/src/secp256k1-stamp/secp256k1-update.rule
+/home/marscat/Desktop/ethereum/aleth/cmake/deps/src/secp256k1-stamp/secp256k1-patch.rule
+/home/marscat/Desktop/ethereum/aleth/cmake/deps/src/secp256k1-stamp/secp256k1-configure.rule
+/home/marscat/Desktop/ethereum/aleth/cmake/deps/src/secp256k1-stamp/secp256k1-build.rule

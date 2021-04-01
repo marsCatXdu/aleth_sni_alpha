@@ -1,0 +1,13 @@
+# Target labels
+ mpir
+# Source files and their labels
+/home/marscat/Desktop/ethereum/aleth/cmake/CMakeFiles/mpir
+/home/marscat/Desktop/ethereum/aleth/cmake/CMakeFiles/mpir.rule
+/home/marscat/Desktop/ethereum/aleth/cmake/CMakeFiles/mpir-complete.rule
+/home/marscat/Desktop/ethereum/aleth/cmake/deps/src/mpir-stamp/mpir-install.rule
+/home/marscat/Desktop/ethereum/aleth/cmake/deps/src/mpir-stamp/mpir-mkdir.rule
+/home/marscat/Desktop/ethereum/aleth/cmake/deps/src/mpir-stamp/mpir-download.rule
+/home/marscat/Desktop/ethereum/aleth/cmake/deps/src/mpir-stamp/mpir-update.rule
+/home/marscat/Desktop/ethereum/aleth/cmake/deps/src/mpir-stamp/mpir-patch.rule
+/home/marscat/Desktop/ethereum/aleth/cmake/deps/src/mpir-stamp/mpir-configure.rule
+/home/marscat/Desktop/ethereum/aleth/cmake/deps/src/mpir-stamp/mpir-build.rule

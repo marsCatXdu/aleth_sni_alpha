@@ -1,0 +1,13 @@
+# Target labels
+ binaryen
+# Source files and their labels
+/home/marscat/Desktop/ethereum/aleth/cmake/CMakeFiles/binaryen
+/home/marscat/Desktop/ethereum/aleth/cmake/CMakeFiles/binaryen.rule
+/home/marscat/Desktop/ethereum/aleth/cmake/CMakeFiles/binaryen-complete.rule
+/home/marscat/Desktop/ethereum/aleth/cmake/deps/src/binaryen-stamp/binaryen-install.rule
+/home/marscat/Desktop/ethereum/aleth/cmake/deps/src/binaryen-stamp/binaryen-mkdir.rule
+/home/marscat/Desktop/ethereum/aleth/cmake/deps/src/binaryen-stamp/binaryen-download.rule
+/home/marscat/Desktop/ethereum/aleth/cmake/deps/src/binaryen-stamp/binaryen-update.rule
+/home/marscat/Desktop/ethereum/aleth/cmake/deps/src/binaryen-stamp/binaryen-patch.rule
+/home/marscat/Desktop/ethereum/aleth/cmake/deps/src/binaryen-stamp/binaryen-configure.rule
+/home/marscat/Desktop/ethereum/aleth/cmake/deps/src/binaryen-stamp/binaryen-build.rule

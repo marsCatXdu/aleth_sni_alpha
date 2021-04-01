@@ -1,0 +1,3 @@
+repository='external project URL'
+module='https://github.com/WebAssembly/binaryen/archive/1.37.35.tar.gz'
+tag='SHA256=19439e41dc576446eaae0c4a8e07d4cd4c40aea7dfb0a6475b925686852f8006'
