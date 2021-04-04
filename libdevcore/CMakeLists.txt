@@ -17,6 +17,8 @@ add_library(
     db.h
     DBFactory.cpp
     DBFactory.h
+    DBInterface.h
+    DBInterface.cpp
     dbfwd.h
     Exceptions.h
     FileSystem.cpp

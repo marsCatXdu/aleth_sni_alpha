@@ -1,0 +1,3 @@
+/home/marscat/Desktop/ethereum/aleth_sni_alpha/tmpterminal/CMakeFiles/rebuild_cache.dir
+/home/marscat/Desktop/ethereum/aleth_sni_alpha/tmpterminal/CMakeFiles/MaskashTerminal.dir
+/home/marscat/Desktop/ethereum/aleth_sni_alpha/tmpterminal/CMakeFiles/edit_cache.dir

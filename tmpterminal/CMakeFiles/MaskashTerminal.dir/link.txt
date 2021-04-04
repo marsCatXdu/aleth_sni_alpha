@@ -1,0 +1,1 @@
+/usr/bin/c++    -rdynamic CMakeFiles/MaskashTerminal.dir/tmpterm.cpp.o  -o MaskashTerminal -lboost_program_options 

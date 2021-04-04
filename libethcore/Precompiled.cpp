@@ -5,6 +5,9 @@
 
 #include "Precompiled.h"
 #include "ChainOperationParams.h"
+
+#include "libdevcore/DBInterface.h"
+
 #include <libdevcore/Log.h>
 #include <libdevcore/SHA3.h>
 #include <libdevcrypto/Blake2.h>
@@ -80,6 +83,18 @@ ETH_REGISTER_PRECOMPILED(ecrecover)(bytesConstRef _in)
         }
     }
     return {true, {}};
+}
+
+ETH_REGISTER_PRECOMPILED_PRICER(DBTest)
+(bytesConstRef _in, ChainOperationParams const& /*_chainParams*/, u256 const& /*_blockNumber*/)
+{
+    return linearPricer(60, 12, _in);
+}
+
+ETH_REGISTER_PRECOMPILED(DBTest)(bytesConstRef _in)
+{
+    _in;
+    return {true, DBTest()};
 }
 
 ETH_REGISTER_PRECOMPILED_PRICER(sha256)

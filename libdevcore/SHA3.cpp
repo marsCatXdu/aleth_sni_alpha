@@ -20,4 +20,6 @@ bool sha3(bytesConstRef _input, bytesRef o_output) noexcept
     bytesConstRef{h.bytes, 32}.copyTo(o_output);
     return true;
 }
+
+
 }  // namespace dev
