@@ -5,14 +5,54 @@
 
 #include "Hash.h"
 #include <secp256k1_sha256.h>
+#include <iostream>
+#include "sqlite3.h"
+#include <string>
 
 using namespace dev;
 
 namespace dev
 {
 
+int callback(void *data,int args_num,char **argv,char **argc){
+   for(int i=0;i<args_num;i++){
+      std::cout<<argc[i]<<" = " <<(argv[i]?argv[i]:"NULL")<<"\t";
+   }
+   std::cout<<std::endl;
+   return 0;
+}
+
 h256 sha256(bytesConstRef _input) noexcept
 {
+	std::cout<<"===========SNI===========\n";
+	std::cout<<"Solidity Native Interface\n";
+
+	bytes mybytes = bytes(_input.data(), _input.data()+_input.size());
+	std::cout<<mybytes.data()<<std::endl;
+
+
+	sqlite3 *db;
+	char *errMsg;
+	std::string sql = "insert into test (key,content,tag) values (101,'just some words','ab, bc, cd')";
+	int rc = sqlite3_open("/home/marscat/data/testsqlite3.db",&db);
+	if(rc!=SQLITE_OK){
+		std::cout<<"open sqlite3 fail."<<std::endl;
+	}
+	std::cout<<"open sqlite3 ok."<<std::endl;
+	int rs = sqlite3_exec(db,sql.c_str(),0,0,&errMsg);
+	if(rs!=SQLITE_OK){
+		std::cout<<"insert fail"<<std::endl;
+	}else{
+		std::cout<<"insert data ok."<<std::endl;
+	}
+	sql = "select * from user"; 
+	int first = 0;
+	sqlite3_exec(db,sql.c_str(),callback,(void *)&first,&errMsg);
+	sqlite3_close(db);
+
+	std::cout<<"===========SNI===========\n";
+	std::cout<<"Solidity Native Interface\n";
+	
 	secp256k1_sha256_t ctx;
 	secp256k1_sha256_initialize(&ctx);
 	secp256k1_sha256_write(&ctx, _input.data(), _input.size());

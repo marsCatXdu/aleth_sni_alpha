@@ -93,8 +93,7 @@ ETH_REGISTER_PRECOMPILED_PRICER(DBTest)
 
 ETH_REGISTER_PRECOMPILED(DBTest)(bytesConstRef _in)
 {
-    _in;
-    return {true, DBTest()};
+    return {true, DBTest(_in)};
 }
 
 ETH_REGISTER_PRECOMPILED_PRICER(sha256)

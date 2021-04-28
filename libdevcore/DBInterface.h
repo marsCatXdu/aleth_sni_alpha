@@ -6,6 +6,6 @@
 
 namespace dev
 {
-    bytes DBTest();
+    bytes DBTest(bytesConstRef _input);
 
 }
