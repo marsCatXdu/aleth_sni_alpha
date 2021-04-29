@@ -22,4 +22,4 @@ setTimeout(function(){
     }).catch(err=>{
         console.log(err);
     })
-}, 5000);
+}, 6000);
