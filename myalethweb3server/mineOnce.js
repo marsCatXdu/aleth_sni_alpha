@@ -1,4 +1,4 @@
-miner.setEtherbase("0x3ed04B8cdeA78aF1aB47d83b8B440380F18085Ad");
+miner.setEtherbase("0x7B0C8ed495e30a26852e81b3CF15BA49f4D0c396");
 
 let initBlockNum;
 eth.getBlockNumber().then(res=>{

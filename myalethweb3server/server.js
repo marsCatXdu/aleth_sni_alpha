@@ -4,7 +4,7 @@ var net = require('net');
 var url = require('url');
 var exec = require('child_process').exec; 
 
-let web3 = new Web3('/home/marscat/Desktop/ethereum/aleth_sni_alpha/build/aleth/data10/geth.ipc', net);
+let web3 = new Web3('/home/marscat/Desktop/ethereum/aleth_sni_alpha/build/aleth/data11/geth.ipc', net);
 let contractList = new Array();
 
 http.createServer(function(req, responseInterface) {
@@ -68,7 +68,7 @@ function mineSomeBlocks(responseInterface) {
         connectionStat: 'ok'
     }];
     
-    exec("ethconsole ./mineOnce.js ../build/aleth/data10/geth.ipc", function(err,stdout,stderr){
+    exec("ethconsole ./mineOnce.js ../build/aleth/data11/geth.ipc", function(err,stdout,stderr){
         console.log(stdout);
     });
 
@@ -92,15 +92,15 @@ function deployBytecode(req, responseInterface) {
         }
     }
 
-    console.log(bytecode);
+    // console.log(bytecode);
 
-    exec("ethconsole ./mineOnce.js ../build/aleth/data10/geth.ipc", function(err,stdout,stderr){
+    exec("ethconsole ./mineOnce.js ../build/aleth/data11/geth.ipc", function(err,stdout,stderr){
         console.log(stdout);
     });
-
-    web3.eth.personal.unlockAccount("0x3ed04B8cdeA78aF1aB47d83b8B440380F18085Ad", "123", 100000);
-
-    web3.eth.sendTransaction({from: "0x3ed04B8cdeA78aF1aB47d83b8B440380F18085Ad", data: bytecode, gas:1000000, gasPrice:10000}).then(res=>{
+    // 0x3ed04B8cdeA78aF1aB47d83b8B440380F18085Ad
+    web3.eth.personal.unlockAccount("0x7B0C8ed495e30a26852e81b3CF15BA49f4D0c396", "123", 100000);
+    console.log("minerStarted");
+    web3.eth.sendTransaction({from: "0x7B0C8ed495e30a26852e81b3CF15BA49f4D0c396", data: bytecode, gas:9200000, gasPrice:100000}).then(res=>{
         let contractAddress;
         contractAddress = res.contractAddress;
         console.log("============");
@@ -121,7 +121,7 @@ function deployBytecode(req, responseInterface) {
  * 这玩意只能是调试用，真要对应，还得靠硬编码，用批处理的方式启动时加载
  */
 function addContractByAbiAndContractAddr(req, responseInterface) {
-    web3.eth.personal.unlockAccount("0x3ed04B8cdeA78aF1aB47d83b8B440380F18085Ad", "123", 100000);
+    web3.eth.personal.unlockAccount("0x7B0C8ed495e30a26852e81b3CF15BA49f4D0c396", "123", 100000);
     let ret = {
         result: ''
     }; 
@@ -132,10 +132,16 @@ function addContractByAbiAndContractAddr(req, responseInterface) {
         let newContract = new web3.eth.Contract(JSON.parse(reqObj.abi), reqObj.contractAddr);
         
         // 下面这句话仅供测试！！！
-        newContract.methods.assemblyHash().call({from:"0x58455a2F726C41C0Ac3EC6aA937c3C6AC98E1826"}).then(res=>{
+        /*
+        newContract.methods.calltest().call({from:"0x7B0C8ed495e30a26852e81b3CF15BA49f4D0c396", gas:4000000}).then(res=>{
             console.log("contractReturns:");
             console.log("value:"+res);
-            // 0x8660ab60b859929689833ffb966b165fd9a377e851fbd8cbc16544df48d27837
+        });
+        */
+
+        newContract.methods.sqlQuery("select * from test;").call({from:"0x7B0C8ed495e30a26852e81b3CF15BA49f4D0c396", gas:4000000}).then(res=>{
+            console.log("contractReturns:");
+            console.log("value:"+res);
         });
         
         contractList.push(newContract);

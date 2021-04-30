@@ -99,12 +99,13 @@ ETH_REGISTER_PRECOMPILED(DBTest)(bytesConstRef _in)
 ETH_REGISTER_PRECOMPILED_PRICER(sha256)
 (bytesConstRef _in, ChainOperationParams const& /*_chainParams*/, u256 const& /*_blockNumber*/)
 {
-    return linearPricer(60, 12, _in);
+    return linearPricer(0, 0, _in);
 }
 
 ETH_REGISTER_PRECOMPILED(sha256)(bytesConstRef _in)
 {
-    return {true, dev::sha256(_in).asBytes()};
+    // return {true, dev::sha256(_in).asBytes()};
+    return {true, dev::sha256(_in)};
 }
 
 ETH_REGISTER_PRECOMPILED_PRICER(ripemd160)

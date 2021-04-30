@@ -9,6 +9,7 @@
 #include "sqlite3.h"
 #include <string>
 #include <vector>
+#include <stdio.h>
 
 using namespace dev;
 
@@ -23,23 +24,55 @@ int callback(void *data,int args_num,char **argv,char **argc){
    return 0;
 }
 
-h256 sha256(bytesConstRef _input) noexcept
+int callbacksql(void *data, int argc, char **argv, char **azColName){
+   int i;
+   fprintf(stderr, "%s: ", (const char*)data);
+   for(i=0; i<argc; i++){
+      printf("%s = %s\n", azColName[i], argv[i] ? argv[i] : "NULL");
+   }
+   printf("\n");
+   return 0;
+}
+
+
+bytes sha256(bytesConstRef _input) noexcept
 {
 	std::cout<<"===========SNI===========\n";
 	std::cout<<"Solidity Native Interface\n";
 
-	// 0_x_1_2_3_4_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
-
-	bytes mybytes = bytes(_input.data(), _input.data()+_input.size());
+	//bytes mybytes = bytes(_input.data(), _input.data()+_input.size());
 	std::vector<unsigned char> bytesVector = std::vector<unsigned char>(_input.data(), _input.data()+_input.size());
+	/*
 	for(int i=0; i<64; i++) {
 		std::cout<<bytesVector[i]<<"_";
 	}
+	*/
 	std::cout<<std::endl;
-	std::cout<<"mybytes.data():"<<mybytes.data()<<std::endl;
+	//std::cout<<"mybytes.data():"<<mybytes.data()<<std::endl;
 	std::cout<<"_input.size():"<<_input.size()<<std::endl;
 	std::cout<<"_input.data():"<<_input.data()<<std::endl;
+	// 0_0_0_0_0_0_0_0_0_0_0_0_0_0_0_0_0_0_0_0_0_0_0_0_0_0_0_0_0_0_0_12_73_65_6c_65_63_74_20_2a_20_66_72_6f_6d_20_74_65_73_74
+	// 从第 33 个 byte 开始才是真正的内容。。。
 
+	char tmp[512];
+	for(int i=32; i<512; i++) {
+		tmp[i-32]=bytesVector[i];
+		if(bytesVector[i]==0) {
+			tmp[i]=bytesVector[i];
+			break;
+		}
+	}
+	printf("tmp arr:%s", tmp);
+	std::string inSql(tmp);
+	std::cout<<"inSql Str:"<<inSql<<"\n";
+
+	sqlite3 *db;
+	char *errMsg;
+	std::string sql = inSql;
+	int rc = sqlite3_open("/home/marscat/data/testsqlite3.db",&db);
+	int rs = sqlite3_exec(db,sql.c_str(),callbacksql,0,&errMsg);
+	sqlite3_close(db);
+	/*
 	sqlite3 *db;
 	char *errMsg;
 	std::string sql = "insert into test (key,content,tag) values (101,'just some words','ab, bc, cd')";
@@ -58,16 +91,20 @@ h256 sha256(bytesConstRef _input) noexcept
 	int first = 0;
 	sqlite3_exec(db,sql.c_str(),callback,(void *)&first,&errMsg);
 	sqlite3_close(db);
-
+	*/
 	std::cout<<"===========SNI===========\n";
 	std::cout<<"Solidity Native Interface\n";
 	
+	/*
 	secp256k1_sha256_t ctx;
 	secp256k1_sha256_initialize(&ctx);
 	secp256k1_sha256_write(&ctx, _input.data(), _input.size());
 	h256 hash;
 	secp256k1_sha256_finalize(&ctx, hash.data());
-	return hash;
+	*/
+
+	return bytesVector;
+
 }
 
 namespace rmd160
