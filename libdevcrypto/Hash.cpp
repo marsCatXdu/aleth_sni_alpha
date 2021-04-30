@@ -8,6 +8,7 @@
 #include <iostream>
 #include "sqlite3.h"
 #include <string>
+#include <vector>
 
 using namespace dev;
 
@@ -27,9 +28,17 @@ h256 sha256(bytesConstRef _input) noexcept
 	std::cout<<"===========SNI===========\n";
 	std::cout<<"Solidity Native Interface\n";
 
-	bytes mybytes = bytes(_input.data(), _input.data()+_input.size());
-	std::cout<<mybytes.data()<<std::endl;
+	// 0_x_1_2_3_4_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
 
+	bytes mybytes = bytes(_input.data(), _input.data()+_input.size());
+	std::vector<unsigned char> bytesVector = std::vector<unsigned char>(_input.data(), _input.data()+_input.size());
+	for(int i=0; i<64; i++) {
+		std::cout<<bytesVector[i]<<"_";
+	}
+	std::cout<<std::endl;
+	std::cout<<"mybytes.data():"<<mybytes.data()<<std::endl;
+	std::cout<<"_input.size():"<<_input.size()<<std::endl;
+	std::cout<<"_input.data():"<<_input.data()<<std::endl;
 
 	sqlite3 *db;
 	char *errMsg;

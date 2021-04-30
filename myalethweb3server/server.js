@@ -132,11 +132,13 @@ function addContractByAbiAndContractAddr(req, responseInterface) {
         let newContract = new web3.eth.Contract(JSON.parse(reqObj.abi), reqObj.contractAddr);
         
         // 下面这句话仅供测试！！！
-        // newContract.methods.callPrecompiled().call({from:"0x58455a2F726C41C0Ac3EC6aA937c3C6AC98E1826"})
+        newContract.methods.assemblyHash().call({from:"0x58455a2F726C41C0Ac3EC6aA937c3C6AC98E1826"}).then(res=>{
+            console.log("contractReturns:");
+            console.log("value:"+res);
+            // 0x8660ab60b859929689833ffb966b165fd9a377e851fbd8cbc16544df48d27837
+        });
         
         contractList.push(newContract);
-        console.log("------------------");
-        console.log(contractList);
     })
 
     /*

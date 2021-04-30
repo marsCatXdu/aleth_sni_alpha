@@ -2,6 +2,7 @@ pragma solidity >=0.5.0 <0.9.0;
 
 contract SimpleStorage {
 
+    /*
     function callPrecompiled() public returns (string memory output) {
         bytes32 out;
         assembly {
@@ -17,10 +18,11 @@ contract SimpleStorage {
         }
         //output = bytes32ToStr(out);
     }
+    */
 
     function assemblyHash() public returns (bytes32[1] memory h) {
         bytes32[2] memory inputs;
-        inputs[0] = "0x1234";
+        inputs[0] = "1234567890abcdefghjklmnopqrstuvw";
         inputs[1] = "0x5678";
         bool success;
         assembly {
