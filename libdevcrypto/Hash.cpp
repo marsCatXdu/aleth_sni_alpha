@@ -16,22 +16,28 @@ using namespace dev;
 namespace dev
 {
 
+
+std::string a;
+
 int callback(void *data,int args_num,char **argv,char **argc){
-   for(int i=0;i<args_num;i++){
-      std::cout<<argc[i]<<" = " <<(argv[i]?argv[i]:"NULL")<<"\t";
-   }
-   std::cout<<std::endl;
-   return 0;
+	a=a+"{";
+	for(int i=0;i<args_num;i++){
+		a=a+"\""+argc[i]+"\":\""+(argv[i]?argv[i]:"NULL")+"\""+",";
+	}
+	a.pop_back();
+	a=a+"},";
+	return 0;
 }
 
 int callbacksql(void *data, int argc, char **argv, char **azColName){
-   int i;
-   fprintf(stderr, "%s: ", (const char*)data);
-   for(i=0; i<argc; i++){
-      printf("%s = %s\n", azColName[i], argv[i] ? argv[i] : "NULL");
-   }
-   printf("\n");
-   return 0;
+	int i;
+	fprintf(stderr, "%s: ", (const char*)data);
+	for(i=0; i<argc; i++){
+		printf("%s = %s\n", azColName[i], argv[i] ? argv[i] : "NULL");
+
+	}
+	printf("\n");
+	return 0;
 }
 
 
@@ -47,12 +53,12 @@ bytes sha256(bytesConstRef _input) noexcept
 		std::cout<<bytesVector[i]<<"_";
 	}
 	*/
-	std::cout<<std::endl;
-	//std::cout<<"mybytes.data():"<<mybytes.data()<<std::endl;
-	std::cout<<"_input.size():"<<_input.size()<<std::endl;
-	std::cout<<"_input.data():"<<_input.data()<<std::endl;
+
+	// std::cout<<"mybytes.data():"<<mybytes.data()<<std::endl;
+	// std::cout<<"_input.size():"<<_input.size()<<std::endl;
+	// std::cout<<"_input.data():"<<_input.data()<<std::endl;
 	// 0_0_0_0_0_0_0_0_0_0_0_0_0_0_0_0_0_0_0_0_0_0_0_0_0_0_0_0_0_0_0_12_73_65_6c_65_63_74_20_2a_20_66_72_6f_6d_20_74_65_73_74
-	// 从第 33 个 byte 开始才是真正的内容。。。
+	// 从第 33 个 byte 开始才是真正的内容
 
 	char tmp[512];
 	for(int i=32; i<512; i++) {
@@ -62,16 +68,29 @@ bytes sha256(bytesConstRef _input) noexcept
 			break;
 		}
 	}
-	printf("tmp arr:%s", tmp);
-	std::string inSql(tmp);
-	std::cout<<"inSql Str:"<<inSql<<"\n";
 
+	std::string inSql(tmp);						// 转换好的来自上层的 sql
+	std::cout<<"inSql Str:"<<inSql<<"\n";
+	std::vector<unsigned char> bytesVectorRet;
+
+	a="[";
 	sqlite3 *db;
 	char *errMsg;
 	std::string sql = inSql;
 	int rc = sqlite3_open("/home/marscat/data/testsqlite3.db",&db);
-	int rs = sqlite3_exec(db,sql.c_str(),callbacksql,0,&errMsg);
+	int rs = sqlite3_exec(db,sql.c_str(),callback,0,&errMsg);
 	sqlite3_close(db);
+	a.pop_back();
+	a=a+"]";
+	
+	std::cout<<a<<std::endl;
+	
+
+	for(int i=0; i<a.length(); i++) {
+		bytesVectorRet.push_back(a[i]);
+	}
+	
+	
 	/*
 	sqlite3 *db;
 	char *errMsg;
@@ -103,7 +122,7 @@ bytes sha256(bytesConstRef _input) noexcept
 	secp256k1_sha256_finalize(&ctx, hash.data());
 	*/
 
-	return bytesVector;
+	return bytesVectorRet;
 
 }
 

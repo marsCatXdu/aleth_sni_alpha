@@ -6,10 +6,13 @@ contract SimpleStorage {
     // 盲审抽完之前的先这样吧，这个就只作为传 sql 语句的接口，具体查询实现都扔前端或者 jsServer
     function sqlQuery(string memory inSql) public returns (string memory) {
         string memory inputSql = inSql;
-        bytes32[32] memory a;
+        bytes32[320] memory a;
         a=callSqlSNI(inputSql);
         string memory results;
-        results = string(abi.encodePacked(bytes32ToString(a[0]), bytes32ToString(a[1]), bytes32ToString(a[2]), bytes32ToString(a[3]), bytes32ToString(a[4]), bytes32ToString(a[5])));
+        for(uint i = 0; i < 320; i++){
+            results = string(abi.encodePacked(results, bytes32ToString(a[i])));
+        }
+        //results = string(abi.encodePacked(bytes32ToString(a[0]), bytes32ToString(a[1]), bytes32ToString(a[2]), bytes32ToString(a[3]), bytes32ToString(a[4]), bytes32ToString(a[5])));
         return results;
     }
 
@@ -34,13 +37,13 @@ contract SimpleStorage {
         return string(bytesArray);
     }
 
-    function callSqlSNI(string memory inSql) public returns (bytes32[32] memory h) {
+    function callSqlSNI(string memory inSql) public returns (bytes32[320] memory h) {
 
         bool success;
 
         assembly {
             // 输入最长为 512 bytes
-            success := call(not(0), 2, 0, inSql, 0x200, h, 0x400)
+            success := call(not(0), 2, 0, inSql, 0x200, h, 0x2800)
             
         }
     }

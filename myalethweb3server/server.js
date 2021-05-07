@@ -7,7 +7,13 @@ var exec = require('child_process').exec;
 let web3 = new Web3('/home/marscat/Desktop/ethereum/aleth_sni_alpha/build/aleth/data11/geth.ipc', net);
 let contractList = new Array();
 
+// TODO: 最后把几个常用的合约地址全都直接在这里 Hardcode 进来吧
+let defaultProxyContractAbi='[{"inputs":[{"internalType":"bytes32","name":"_bytes32","type":"bytes32"}],"name":"bytes32ToString","outputs":[{"internalType":"string","name":"","type":"string"}],"stateMutability":"pure","type":"function"},{"inputs":[{"internalType":"string","name":"inSql","type":"string"}],"name":"callSqlSNI","outputs":[{"internalType":"bytes32[320]","name":"h","type":"bytes32[320]"}],"stateMutability":"nonpayable","type":"function"},{"inputs":[{"internalType":"string","name":"inSql","type":"string"}],"name":"sqlQuery","outputs":[{"internalType":"string","name":"","type":"string"}],"stateMutability":"nonpayable","type":"function"}]';
+let defaultProxyContractAddr="0x7A81cBafb70A0EE0fA5D58A93Fa8C13c6C48dD0B";
+let defaultProxyContract;
+
 http.createServer(function(req, responseInterface) {
+    setDefaultProxyContract();
     responseInterface.setHeader('Access-Control-Allow-Credentials', true);
     responseInterface.setHeader('Access-Control-Allow-Origin', '*')
     let urlObj = url.parse(req.url);
@@ -27,6 +33,8 @@ http.createServer(function(req, responseInterface) {
         deployBytecode(req, responseInterface);
     } else if(urlObj.pathname=="/api/addContractByAbiAndContractAddr") {
         addContractByAbiAndContractAddr(req, responseInterface);
+    } else if(urlObj.pathname=="/api/getItemByNameFuzzy") {
+        getItemByNameFuzzy(req, responseInterface);
     }
         
 }).listen(3000);
@@ -112,6 +120,11 @@ function deployBytecode(req, responseInterface) {
     });
 }
 
+function setDefaultProxyContract() {
+    defaultProxyContract = new web3.eth.Contract(JSON.parse(defaultProxyContractAbi), defaultProxyContractAddr);
+}
+
+
 /**
  * @param req 包含 abi 和合约地址
  * {
@@ -119,45 +132,48 @@ function deployBytecode(req, responseInterface) {
  *     'contractAddr': '...'
  * }
  * 这玩意只能是调试用，真要对应，还得靠硬编码，用批处理的方式启动时加载
+ * 已经定型的 solidity 传话筒 0x7A81cBafb70A0EE0fA5D58A93Fa8C13c6C48dD0B
  */
 function addContractByAbiAndContractAddr(req, responseInterface) {
     web3.eth.personal.unlockAccount("0x7B0C8ed495e30a26852e81b3CF15BA49f4D0c396", "123", 100000);
-    let ret = {
-        result: ''
-    }; 
+    let newContract;
     let reqObj;
     req.setEncoding("utf-8");
     req.on('data', (chunk) => {
         reqObj = JSON.parse(chunk.toString());
-        let newContract = new web3.eth.Contract(JSON.parse(reqObj.abi), reqObj.contractAddr);
-        
-        // 下面这句话仅供测试！！！
-        /*
-        newContract.methods.calltest().call({from:"0x7B0C8ed495e30a26852e81b3CF15BA49f4D0c396", gas:4000000}).then(res=>{
+        newContract = new web3.eth.Contract(JSON.parse(reqObj.abi), reqObj.contractAddr);
+        newContract.methods.sqlQuery("select * from car2 where d>202000;").call({from:"0x7B0C8ed495e30a26852e81b3CF15BA49f4D0c396", gas:9800000}).then(res=>{
             console.log("contractReturns:");
             console.log("value:"+res);
-        });
-        */
-
-        newContract.methods.sqlQuery("select * from test;").call({from:"0x7B0C8ed495e30a26852e81b3CF15BA49f4D0c396", gas:4000000}).then(res=>{
-            console.log("contractReturns:");
-            console.log("value:"+res);
+            responseInterface.write(JSON.stringify(res));
+            responseInterface.end();
         });
         
         contractList.push(newContract);
     })
+}
 
-    /*
-    let paramArr = req.url.split("?")[1].split("&");
+function getItemByNameFuzzy(req, responseInterface) {
+    web3.eth.personal.unlockAccount("0x7B0C8ed495e30a26852e81b3CF15BA49f4D0c396", "123", 100000);
+    req.setEncoding("utf-8");
+    req.on('data', (chunk) => {
+        reqObj = JSON.parse(chunk.toString());
+        let sqlStr;
+        if(reqObj.orderBy=="default" || !reqObj.orderBy) {
+            sqlStr = "select * from car2 where tt like '%"+reqObj.fuzzyName+"%';";
+        } else if (reqObj.orderBy=="highestPrice") {
+            sqlStr = "select * from car2 where tt like '%"+reqObj.fuzzyName+"%' order by p desc;";
+        } else if (reqObj.orderBy=="lowestPrice") {
+            sqlStr = "select * from car2 where tt like '%"+reqObj.fuzzyName+"%' order by p asc;";
+        } else if (reqObj.orderBy=="shortestTrip") {
+            sqlStr = "select * from car2 where tt like '%"+reqObj.fuzzyName+"%' order by t asc;";
+        } else if (reqObj.orderBy=="shortestAge") {
+            sqlStr = "select * from car2 where tt like '%"+reqObj.fuzzyName+"%' order by d desc;";
+        } 
+        defaultProxyContract.methods.sqlQuery(sqlStr).call({from:"0x7B0C8ed495e30a26852e81b3CF15BA49f4D0c396", gas:9800000}).then(res=>{
+            responseInterface.write(JSON.stringify(res));
+            responseInterface.end();
+        });
 
-    let abi = paramArr[0].split("=")[1];
-    let contractAddr = paramArr[1].split("=")[1];
-    console.log(abi);
-
-    let newContract = new web3.eth.Contract(abi, contractAddr);
-    contractList.push(newContract);
-    console.log(contractList);
-    */
-    responseInterface.write(JSON.stringify(ret));
-    responseInterface.end();
+    })
 }
