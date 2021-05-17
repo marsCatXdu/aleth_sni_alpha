@@ -35,6 +35,8 @@ http.createServer(function(req, responseInterface) {
         addContractByAbiAndContractAddr(req, responseInterface);
     } else if(urlObj.pathname=="/api/getItemByNameFuzzy") {
         getItemByNameFuzzy(req, responseInterface);
+    } else if(urlObj.pathname=="/api/getItemByNameFuzzyParams") {
+        getItemByNameFuzzyParams(req, responseInterface);
     }
         
 }).listen(3000);
@@ -159,7 +161,7 @@ function getItemByNameFuzzy(req, responseInterface) {
     req.on('data', (chunk) => {
         reqObj = JSON.parse(chunk.toString());
         let sqlStr;
-        if(reqObj.orderBy=="default" || !reqObj.orderBy) {
+        if(reqObj.orderBy=="default" || !reqObj.orderBy) {          // i,tt,p,t,l,d
             sqlStr = "select * from car2 where tt like '%"+reqObj.fuzzyName+"%';";
         } else if (reqObj.orderBy=="highestPrice") {
             sqlStr = "select * from car2 where tt like '%"+reqObj.fuzzyName+"%' order by p desc;";
@@ -174,6 +176,59 @@ function getItemByNameFuzzy(req, responseInterface) {
             responseInterface.write(JSON.stringify(res));
             responseInterface.end();
         });
+    })
+}
 
+function getItemByNameFuzzyParams(req, responseInterface) {
+    web3.eth.personal.unlockAccount("0x7B0C8ed495e30a26852e81b3CF15BA49f4D0c396", "123", 100000);
+    req.setEncoding("utf-8");
+    req.on('data', (chunk) => {
+        reqObj = JSON.parse(chunk.toString());
+        console.log(reqObj);
+        let lowPrice, highPrice, earlistDate, latestDate;
+        if(reqObj.params.priceRange==0) {
+            lowPrice=0;
+            highPrice=999;
+        } else if(reqObj.params.priceRange==1) {
+            lowPrice=0;
+            highPrice=5;
+        } else if(reqObj.params.priceRange==2) {
+            lowPrice=5;
+            highPrice=10;
+        } else if(reqObj.params.priceRange==3) {
+            lowPrice=10;
+            highPrice=20;
+        } else if(reqObj.params.priceRange==4) {
+            lowPrice=20;
+            highPrice=30;
+        } else if(reqObj.params.priceRange==5) {
+            lowPrice=30;
+            highPrice=999;
+        }
+        
+        console.log(reqObj.params.carAgeRange.lower);
+
+        earlistDate=202105-reqObj.params.carAgeRange.upper*100;
+        latestDate=202105-reqObj.params.carAgeRange.lower*100;
+
+        console.log(earlistDate);
+        console.log(latestDate);
+
+        let sqlStr;
+        if(reqObj.orderBy=="default" || !reqObj.orderBy) {          // i,tt,p,t,l,d
+            sqlStr = "select * from car2 where tt like '%"+reqObj.fuzzyName+"%' and p>="+lowPrice+" and p<="+highPrice+" and d>="+earlistDate+" and d<="+latestDate+";";
+        } else if (reqObj.orderBy=="highestPrice") {
+            sqlStr = "select * from car2 where tt like '%"+reqObj.fuzzyName+"%' and p>="+lowPrice+" and p<="+highPrice+" and d>="+earlistDate+" and d<="+latestDate+" order by p desc;";
+        } else if (reqObj.orderBy=="lowestPrice") {
+            sqlStr = "select * from car2 where tt like '%"+reqObj.fuzzyName+"%' and p>="+lowPrice+" and p<="+highPrice+" and d>="+earlistDate+" and d<="+latestDate+" order by p asc;";
+        } else if (reqObj.orderBy=="shortestTrip") {
+            sqlStr = "select * from car2 where tt like '%"+reqObj.fuzzyName+"%' and p>="+lowPrice+" and p<="+highPrice+" and d>="+earlistDate+" and d<="+latestDate+" order by t asc;";
+        } else if (reqObj.orderBy=="shortestAge") {
+            sqlStr = "select * from car2 where tt like '%"+reqObj.fuzzyName+"%' and p>="+lowPrice+" and p<="+highPrice+" and d>="+earlistDate+" and d<="+latestDate+" order by d desc;";
+        } 
+        defaultProxyContract.methods.sqlQuery(sqlStr).call({from:"0x7B0C8ed495e30a26852e81b3CF15BA49f4D0c396", gas:9800000}).then(res=>{
+            responseInterface.write(JSON.stringify(res));
+            responseInterface.end();
+        });
     })
 }
