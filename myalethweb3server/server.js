@@ -37,6 +37,8 @@ http.createServer(function(req, responseInterface) {
         getItemByNameFuzzy(req, responseInterface);
     } else if(urlObj.pathname=="/api/getItemByNameFuzzyParams") {
         getItemByNameFuzzyParams(req, responseInterface);
+    } else if(urlObj.pathname=="/api/executeSql") {
+        executeSql(req, responseInterface);
     }
         
 }).listen(3000);
@@ -160,6 +162,12 @@ function getItemByNameFuzzy(req, responseInterface) {
     req.setEncoding("utf-8");
     req.on('data', (chunk) => {
         reqObj = JSON.parse(chunk.toString());
+
+        if(reqObj.fuzzyName.search(" ")!=-1) {  // 如果有空格
+            console.log(reqObj.fuzzyName);
+            reqObj.fuzzyName=reqObj.fuzzyName.replace(/\ /g, '%');
+        }
+
         let sqlStr;
         if(reqObj.orderBy=="default" || !reqObj.orderBy) {          // i,tt,p,t,l,d
             sqlStr = "select * from car2 where tt like '%"+reqObj.fuzzyName+"%';";
@@ -214,21 +222,35 @@ function getItemByNameFuzzyParams(req, responseInterface) {
         console.log(earlistDate);
         console.log(latestDate);
 
+        if(reqObj.fuzzyName.search(" ")!=-1) {  // 如果有空格
+            console.log(reqObj.fuzzyName);
+            reqObj.fuzzyName=reqObj.fuzzyName.replace(/\ /g, '%');
+        }
+
         let sqlStr;
         if(reqObj.orderBy=="default" || !reqObj.orderBy) {          // i,tt,p,t,l,d
-            sqlStr = "select * from car2 where tt like '%"+reqObj.fuzzyName+"%' and p>="+lowPrice+" and p<="+highPrice+" and d>="+earlistDate+" and d<="+latestDate+";";
+            sqlStr = "select i,tt,p,t,l,d from car2 where tt like '%"+reqObj.fuzzyName+"%' and p>="+lowPrice+" and p<="+highPrice+" and d>="+earlistDate+" and d<="+latestDate+";";
         } else if (reqObj.orderBy=="highestPrice") {
-            sqlStr = "select * from car2 where tt like '%"+reqObj.fuzzyName+"%' and p>="+lowPrice+" and p<="+highPrice+" and d>="+earlistDate+" and d<="+latestDate+" order by p desc;";
+            sqlStr = "select i,tt,p,t,l,d from car2 where tt like '%"+reqObj.fuzzyName+"%' and p>="+lowPrice+" and p<="+highPrice+" and d>="+earlistDate+" and d<="+latestDate+" order by p desc;";
         } else if (reqObj.orderBy=="lowestPrice") {
-            sqlStr = "select * from car2 where tt like '%"+reqObj.fuzzyName+"%' and p>="+lowPrice+" and p<="+highPrice+" and d>="+earlistDate+" and d<="+latestDate+" order by p asc;";
+            sqlStr = "select i,tt,p,t,l,d from car2 where tt like '%"+reqObj.fuzzyName+"%' and p>="+lowPrice+" and p<="+highPrice+" and d>="+earlistDate+" and d<="+latestDate+" order by p asc;";
         } else if (reqObj.orderBy=="shortestTrip") {
-            sqlStr = "select * from car2 where tt like '%"+reqObj.fuzzyName+"%' and p>="+lowPrice+" and p<="+highPrice+" and d>="+earlistDate+" and d<="+latestDate+" order by t asc;";
+            sqlStr = "select i,tt,p,t,l,d from car2 where tt like '%"+reqObj.fuzzyName+"%' and p>="+lowPrice+" and p<="+highPrice+" and d>="+earlistDate+" and d<="+latestDate+" order by t asc;";
         } else if (reqObj.orderBy=="shortestAge") {
-            sqlStr = "select * from car2 where tt like '%"+reqObj.fuzzyName+"%' and p>="+lowPrice+" and p<="+highPrice+" and d>="+earlistDate+" and d<="+latestDate+" order by d desc;";
+            sqlStr = "select i,tt,p,t,l,d from car2 where tt like '%"+reqObj.fuzzyName+"%' and p>="+lowPrice+" and p<="+highPrice+" and d>="+earlistDate+" and d<="+latestDate+" order by d desc;";
         } 
         defaultProxyContract.methods.sqlQuery(sqlStr).call({from:"0x7B0C8ed495e30a26852e81b3CF15BA49f4D0c396", gas:9800000}).then(res=>{
             responseInterface.write(JSON.stringify(res));
             responseInterface.end();
         });
+    })
+}
+
+function executeSql() {
+    web3.eth.personal.unlockAccount("0x7B0C8ed495e30a26852e81b3CF15BA49f4D0c396", "123", 100000);
+    req.setEncoding("utf-8");
+    req.on('data', (chunk) => {
+        reqObj = JSON.parse(chunk.toString());
+        console.log(reqObj);
     })
 }
